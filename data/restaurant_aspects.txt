@@ -1,5 +1,0 @@
-Location
-Drinks
-Food
-Ambience
-Service
