@@ -1,0 +1,46 @@
+location street parking avenue river view
+street location parking avenue river view
+parking street location avenue river view
+avenue street parking location river view
+river street parking avenue location view
+view street parking avenue river location
+convenient near
+near convenient
+drinks beverage wines margarita sake
+beverage drinks wines margarita sake
+wines beverage drinks margarita sake
+margarita beverage wines drinks sake
+sake beverage wines margarita drinks
+alcoholic iced bottled
+iced alcoholic bottled
+bottled alcoholic iced
+food pizza tuna sushi burger
+pizza food tuna sushi burger
+tuna pizza food sushi burger
+sushi pizza tuna food burger
+burger pizza tuna sushi food
+spicy tasty delicious bland savory
+tasty spicy delicious bland savory
+delicious spicy tasty bland savory
+bland spicy tasty delicious savory
+savory spicy tasty delicious bland
+ambience atmosphere room decor music space
+atmosphere ambience room decor music space
+room atmosphere ambience decor music space
+decor atmosphere room ambience music space
+music atmosphere room decor ambience space
+space atmosphere room decor music ambience
+romantic small cozy tiny
+small romantic cozy tiny
+cozy romantic small tiny
+tiny romantic small cozy
+service tips manager wait waitress servers
+tips service manager wait waitress servers
+manager tips service wait waitress servers
+wait tips manager service waitress servers
+waitress tips manager wait service servers
+servers tips manager wait waitress service
+attitude rude attentive friendly
+rude attitude attentive friendly
+attentive rude attitude friendly
+friendly rude attentive attitude
