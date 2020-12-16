@@ -1,4 +1,4 @@
-# Aspect-Sentiment-Classification
+# Seed-Word-Driven-Aspect-Classification
 
 ### Train Aspect-distinctive Word Embedding
 ```bash
