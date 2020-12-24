@@ -30,3 +30,6 @@ python pseudo_label.py
 ```
 
 ### LSTM Model Refinement
+```
+python modeltrain.py
+```
