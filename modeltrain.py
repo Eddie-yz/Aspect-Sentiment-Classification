@@ -129,12 +129,13 @@ if __name__ == "__main__":
     thres = 0.0
     output_size = len(aspect_kw)
     embedding_length = 200
-    N_EPOCHS_PRE = 10
-    N_EPOCHS = 50
+    N_EPOCHS_PRE = 20
+    N_EPOCHS = 10
     self_training = True
     restore_pretrain = False
     restore_selftrain = False
-    label_file = 'test_score.txt'
+    file_name = 'test_score'
+    label_file = '{}.txt'.format(file_name)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     with open(os.path.join(label_file)) as f:
@@ -159,7 +160,7 @@ if __name__ == "__main__":
         aspect_embedding[i] = torch.tensor(wv[idx2word[i]])
 
     if restore_pretrain:
-        pretrain_model = torch.load('{}_pretrain.pt'.format(label_file))
+        pretrain_model = torch.load('{}_pretrain.pt'.format(file_name))
     else:
         pretrain_model = RNN(len(wv), embedding_length, embedding_length//2, output_size, 4, True,0.2, aspect_embedding)
 
@@ -172,7 +173,7 @@ if __name__ == "__main__":
     # pretrain
     update_confi = None
     total_dist = None
-    print('start pretrain ...')
+    print('start pre-train ...')
     for epoch in range(N_EPOCHS_PRE):
         train_loss, aspect_train_acc,  pseudo_aspect_train_acc = \
         train(total_dataset_aspect, pretrain_model, pretrain_optimizer, pretrain_scheduler, t=1)
@@ -186,20 +187,21 @@ if __name__ == "__main__":
         last_choice = choice
         
     pretrain_choice = choice
-    torch.save(pretrain_model,'{}_pretrain.pt'.format(label_file))
+    torch.save(pretrain_model,'{}_pretrain.pt'.format(file_name))
     
     # self-train
     if restore_selftrain:
-        aspect_model = torch.load('{}_selftrain.pt'.format(label_file))
+        aspect_model = torch.load('{}_selftrain.pt'.format(file_name))
     else:
         aspect_model = copy.deepcopy(pretrain_model)
     last_choice = pretrain_choice
     aspect_lr = 0.0005
+    temp = 1.2
     aspect_optimizer = torch.optim.Adam(aspect_model.parameters(), lr=aspect_lr)
     aspect_scheduler = torch.optim.lr_scheduler.StepLR(aspect_optimizer, 1, gamma=0.9)
     new_update_confi = update_confi
     update_index = torch.argsort(new_update_confi, descending=True)
-    print('start selftrain ...')
+    print('start self-train ...')
     for _ in range(N_EPOCHS):
         sub_dataset_aspect = []
         # reorder
@@ -207,15 +209,15 @@ if __name__ == "__main__":
             t = docs[i]
             s_index = [word2idx[w] if w in wv else 0 for w in t.split(' ')]
             sub_dataset_aspect.append([s_index, total_dist[i],asp_gt[i]])   
-        train_loss, aspect_train_acc,  pseudo_aspect_train_acc = train(sub_dataset_aspect, aspect_model, aspect_optimizer, aspect_scheduler,t=1.2)
+        train_loss, aspect_train_acc,  pseudo_aspect_train_acc = train(sub_dataset_aspect, aspect_model, aspect_optimizer, aspect_scheduler,t=temp)
         _, aspect_test_acc_total, pseudo_aspect_test_acc_total, total_dist = test(total_dataset_aspect, aspect_model)
         print('Train loss', train_loss)#, aspect_test_acc, pseudo_aspect_test_acc)
         print('Total validation {:.5f}, label acc {:.5f}'.format(aspect_test_acc_total, pseudo_aspect_test_acc_total))
         new_update_confi, choice = torch.max(total_dist,axis=1)
         label_change = (1 - torch.sum(last_choice == choice).item() / len(choice))*100
         print(label_change)
-        if label_change< 0.1:
+        if label_change< 1.0:
             break
         last_choice = choice
         
-    torch.save(aspect_model,'{}_selftrain.pt'.format(label_file))
+    torch.save(aspect_model,'{}_selftrain.pt'.format(file_name))
